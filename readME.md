@@ -45,7 +45,6 @@ Ensure you have the following installed:
 - Git
 - Node.js
 - pnpm
-- Docker
 
 ### 🔧 Installation
 
@@ -58,7 +57,7 @@ Ensure you have the following installed:
 2. Navigate to the project directory:
 
    ```sh
-   cd obsidian-superviz/
+   cd obsidian-superviz/obsidian-superviz-front
    ```
 
 3. Copy the environment configuration file:
@@ -97,7 +96,7 @@ Ensure you have the following installed:
 
 ## ✒️ Author
 
-- **My Myself and I** - _Developer_ - [GitHub](https://github.com/yourusername)
+- **My Myself and I** - _Developer_ - [GitHub](https://github.com/henrique-leme)
 
 See the full list of [contributors](https://github.com/yourusername/obsidian-superviz/contributors) who participated in this project.
 
