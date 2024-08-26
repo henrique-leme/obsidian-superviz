@@ -8,27 +8,24 @@ const Rooms: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Obtém o nome e o participantId do estado da navegação
   const { name, participantId } = location.state as {
     name: string;
     participantId: string;
   };
 
-  // Busca as salas disponíveis
   const fetchRooms = async () => {
     try {
       const response = await getRooms();
-      setRooms(response.data); // Atualiza a lista de salas
+      setRooms(response.data);
     } catch (err) {
       console.error("Error fetching rooms:", err);
       setError("Failed to fetch rooms.");
     }
   };
 
-  // Função para criar uma nova sala
   const handleCreateRoom = async () => {
     try {
-      const room = await createRoom(`Sala de ${name}`);
+      const room = await createRoom(`Room for ${name}`);
       navigate(`/room/${room.id}`, { state: { name, participantId } });
     } catch (err) {
       console.error("Error creating room:", err);
@@ -36,7 +33,6 @@ const Rooms: React.FC = () => {
     }
   };
 
-  // Executa a busca de salas quando o componente é montado
   useEffect(() => {
     fetchRooms();
   }, []);

@@ -9,6 +9,7 @@ function VideoCallConference() {
     <VideoConference
       participantType="host"
       collaborationMode={collaborationMode}
+      enableRecording={true}
     />
   );
 }

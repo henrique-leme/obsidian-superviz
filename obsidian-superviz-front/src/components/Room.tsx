@@ -20,12 +20,12 @@ const Room: React.FC<RoomProps> = ({ supervizKey }) => {
         <h1 className="text-4xl mb-6">Welcome, {name}!</h1>
       </div>
 
-      {/* Passa as informações para o SuperVizProvider */}
+      {/* Passes the information to SuperVizProvider */}
       <SuperVizProvider
-        roomId={roomId!} // Passa o ID da sala
-        userName={name} // Nome do usuário
-        participantId={participantId} // ID do participante
-        supervizKey={supervizKey} // Chave de desenvolvedor do SuperViz
+        roomId={roomId!} // Passes the room ID
+        userName={name} // User's name
+        participantId={participantId} // Participant ID
+        supervizKey={supervizKey} // SuperViz developer key
       />
     </div>
   );

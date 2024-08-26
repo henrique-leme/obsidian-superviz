@@ -1,18 +1,18 @@
 import axios from "axios";
 
-// Variáveis de ambiente
+// Environment Variables
 const API_BASE_URL = "https://nodeapi.superviz.com";
 const EMAIL = import.meta.env.VITE_SUPERVIZ_EMAIL;
 const PASSWORD = import.meta.env.VITE_SUPERVIZ_PASSWORD;
 const API_KEY = import.meta.env.VITE_SUPERVIZ_DEVELOPER_KEY;
 
-// Cache do Access Token
+// Cache for Access Token
 let cachedAccessToken: string | null = null;
 let tokenExpiryTime: number | null = null;
 
-// Função para fazer login e obter o access_token
+// Function to log in and obtain access_token
 export const loginAndGetAccessToken = async (): Promise<string> => {
-  // Verificar se o token ainda é válido
+  // Check if the token is still valid
   if (cachedAccessToken && tokenExpiryTime && Date.now() < tokenExpiryTime) {
     return cachedAccessToken;
   }
@@ -31,21 +31,20 @@ export const loginAndGetAccessToken = async (): Promise<string> => {
       }
     );
 
-    const accessToken = response.data.access_token;
-    const expiresIn = response.data.expires_in; // Se houver um tempo de expiração fornecido
+    const { access_token: accessToken, expires_in: expiresIn } = response.data;
 
-    // Atualizar o cache do token e o tempo de expiração
+    // Update token cache and expiry time
     cachedAccessToken = accessToken;
-    tokenExpiryTime = Date.now() + expiresIn * 1000; // Definir o tempo de expiração
+    tokenExpiryTime = Date.now() + expiresIn * 1000;
 
     return accessToken;
   } catch (error) {
-    console.error("Erro ao fazer login:", error);
-    throw new Error("Falha ao obter o access token");
+    console.error("Error logging in:", error);
+    throw new Error("Failed to obtain access token");
   }
 };
 
-// Função para obter os headers de autenticação
+// Function to get authentication headers
 const getAuthHeaders = async () => {
   const accessToken = await loginAndGetAccessToken();
   return {
@@ -55,7 +54,7 @@ const getAuthHeaders = async () => {
   };
 };
 
-// Função para criar um participante
+// Function to create a participant
 export const createParticipant = async (
   name: string,
   participantId: string
@@ -68,74 +67,204 @@ export const createParticipant = async (
         participantId,
         name,
       },
-      {
-        headers,
-      }
+      { headers }
     );
 
     return response.data;
   } catch (error) {
-    console.error("Erro ao criar participante:", error);
-    throw new Error("Falha ao criar participante");
+    console.error("Error creating participant:", error);
+    throw new Error("Failed to create participant");
   }
 };
 
-// Função para listar as salas
+// Function to list rooms
 export const getRooms = async () => {
   try {
     const headers = await getAuthHeaders();
-    const response = await axios.get(`${API_BASE_URL}/groups`, {
-      headers,
-    });
+    const response = await axios.get(`${API_BASE_URL}/groups`, { headers });
     return response.data;
   } catch (error) {
-    console.error("Erro ao listar salas:", error);
-    throw new Error("Falha ao listar salas");
+    console.error("Error listing rooms:", error);
+    throw new Error("Failed to list rooms");
   }
 };
 
-// Função para criar uma sala
+// Function to create a room
 export const createRoom = async (roomName: string) => {
   try {
     const headers = await getAuthHeaders();
     const response = await axios.put(
       `${API_BASE_URL}/groups`,
-      {
-        name: roomName,
-      },
-      {
-        headers,
-      }
+      { name: roomName },
+      { headers }
     );
     return response.data;
   } catch (error) {
-    console.error("Erro ao criar sala:", error);
-    throw new Error("Falha ao criar sala");
+    console.error("Error creating room:", error);
+    throw new Error("Failed to create room");
   }
 };
 
+// Function to add a participant to a group
 export const addParticipantToGroup = async (
   groupId: string,
   participantId: string
 ) => {
   try {
-    const accessToken = await loginAndGetAccessToken();
+    const headers = await getAuthHeaders();
     const response = await axios.post(
       `${API_BASE_URL}/groups/participant/${participantId}`,
-      {
-        group_id: groupId,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          apiKey: API_KEY,
-          "Content-Type": "application/json",
-        },
-      }
+      { group_id: groupId },
+      { headers }
     );
     return response.data;
   } catch (error) {
-    console.error("Erro ao adicionar participante ao grupo:", error);
-    throw new Error("Falha ao adicionar participante ao grupo");
+    console.error("Error adding participant to group:", error);
+    throw new Error("Failed to add participant to group");
+  }
+};
+
+// Function to generate a transcript
+export const postGenerateTranscript = async (recordingId: string) => {
+  try {
+    const headers = await getAuthHeaders();
+    const response = await axios.post(
+      `${API_BASE_URL}/recordings/transcripts`,
+      {
+        recordingId,
+        language: "en-US", // Set language for the transcript
+      },
+      { headers }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error generating transcript:", error);
+    throw new Error("Failed to generate transcript");
+  }
+};
+
+// Function to get recording transcriptions
+export const getRecordingWithTranscriptions = async (recordingId: string) => {
+  try {
+    const headers = await getAuthHeaders();
+    const response = await axios.get(
+      `${API_BASE_URL}/recordings/transcripts/${recordingId}`,
+      { headers }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error getting transcriptions:", error);
+    throw new Error("Failed to get transcriptions");
+  }
+};
+
+// Function to get a transcription
+export const getTranscription = async (recordingId: string) => {
+  try {
+    const headers = await getAuthHeaders();
+    const response = await axios.get(
+      `${API_BASE_URL}/recordings/transcripts/${recordingId}`,
+      { headers }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error getting transcription:", error);
+    throw new Error("Failed to get transcription");
+  }
+};
+
+// Function to get action items
+export const getActionItems = async (recordingId: string) => {
+  try {
+    const headers = await getAuthHeaders();
+    const response = await axios.get(
+      `${API_BASE_URL}/recordings/transcripts/${recordingId}/action-items`,
+      { headers }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error getting action items:", error);
+    throw new Error("Failed to get action items");
+  }
+};
+
+// Function to get follow-ups
+export const getFollowUps = async (recordingId: string) => {
+  try {
+    const headers = await getAuthHeaders();
+    const response = await axios.get(
+      `${API_BASE_URL}/recordings/transcripts/${recordingId}/follow-ups`,
+      { headers }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error getting follow-ups:", error);
+    throw new Error("Failed to get follow-ups");
+  }
+};
+
+// Function to get questions
+export const getQuestions = async (recordingId: string) => {
+  try {
+    const headers = await getAuthHeaders();
+    const response = await axios.get(
+      `${API_BASE_URL}/recordings/transcripts/${recordingId}/questions`,
+      { headers }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error getting questions:", error);
+    throw new Error("Failed to get questions");
+  }
+};
+
+// Function to get topics
+export const getTopics = async (recordingId: string) => {
+  try {
+    const headers = await getAuthHeaders();
+    const response = await axios.get(
+      `${API_BASE_URL}/recordings/transcripts/${recordingId}/topics`,
+      { headers }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error getting topics:", error);
+    throw new Error("Failed to get topics");
+  }
+};
+
+// Function to get summary
+export const getSummary = async (recordingId: string) => {
+  try {
+    const headers = await getAuthHeaders();
+    const response = await axios.get(
+      `${API_BASE_URL}/recordings/transcripts/${recordingId}/summary`,
+      { headers }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error getting summary:", error);
+    throw new Error("Failed to get summary");
+  }
+};
+
+// Function to get recordings
+export const getRecordings = async (roomId?: string) => {
+  try {
+    const headers = await getAuthHeaders();
+    const url = `${API_BASE_URL}/recording`;
+
+    const response = await axios.get(url, {
+      headers,
+      params: {
+        roomId: roomId || undefined, // Filter by roomId if provided
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error getting recordings:", error);
+    throw new Error("Failed to get recordings");
   }
 };

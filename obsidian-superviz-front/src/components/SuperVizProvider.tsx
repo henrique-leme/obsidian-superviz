@@ -1,19 +1,14 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Realtime, SuperVizRoomProvider } from "@superviz/react-sdk";
 import MarkdownEditor from "./MarkdownEditor";
 import VideoCallConference from "./VideoConference";
+import RecordingOptionsPopup from "./RecordOptions"; // Importing RecordingOptionsPopup
 
 interface SuperVizProviderProps {
   roomId: string;
   userName: string;
   participantId: string;
   supervizKey: string;
-}
-
-// Definindo o tipo manualmente com base na estrutura do participante
-interface Participant {
-  id: string;
-  name?: string; // O nome pode ser opcional
 }
 
 function SuperVizProvider({
@@ -24,17 +19,23 @@ function SuperVizProvider({
 }: SuperVizProviderProps) {
   const groupId = roomId;
 
-  const onParticipantJoined = (participant: Participant) => {
+  const [showRecordingOptions, setShowRecordingOptions] = useState(false);
+
+  const onParticipantJoined = (participant: { id: string; name?: string }) => {
     console.log("Participant joined", participant);
   };
 
-  const onParticipantListUpdated = (participantList: Participant[]) => {
+  const onParticipantListUpdated = (
+    participantList: { id: string; name?: string }[]
+  ) => {
     console.log("Participant list updated", participantList);
   };
 
-  useEffect(() => {
-    // Lógica adicional, se necessário
-  }, []);
+  useEffect(() => {}, []);
+
+  const toggleRecordingOptions = () => {
+    setShowRecordingOptions((prev) => !prev);
+  };
 
   return (
     <SuperVizRoomProvider
@@ -42,7 +43,7 @@ function SuperVizProvider({
       roomId={roomId}
       participant={{
         id: participantId,
-        name: userName, // Presume-se que o nome do usuário sempre será fornecido
+        name: userName,
       }}
       group={{
         id: groupId,
@@ -54,6 +55,22 @@ function SuperVizProvider({
       <Realtime />
       <MarkdownEditor userName={userName} />
       <VideoCallConference />
+
+      {/* Button to open recording options */}
+      <button
+        onClick={toggleRecordingOptions}
+        className="fixed bottom-16 right-8 w-16 h-16 bg-blue-500 text-white rounded-full shadow-lg flex items-center justify-center text-lg"
+      >
+        <span>≡</span>
+      </button>
+
+      {/* Display of the recording options popup */}
+      {showRecordingOptions && (
+        <RecordingOptionsPopup
+          roomId={roomId}
+          onClose={toggleRecordingOptions}
+        />
+      )}
     </SuperVizRoomProvider>
   );
 }

@@ -21,7 +21,6 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({ userName }) => {
 
     let isLocalChange = false;
 
-    // Função para sincronizar o conteúdo do editor com o Yjs apenas se for uma mudança externa
     const synchronizeEditorContent = () => {
       if (editorRef.current && !isLocalChange) {
         const content = ytext.toString();
@@ -31,10 +30,9 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({ userName }) => {
       }
     };
 
-    // Callback para o evento 'text-updated'
     const handleTextUpdated = (data: { content: string }) => {
       if (!isLocalChange) {
-        isLocalChange = true; // Impede que a atualização externa afete a digitação atual
+        isLocalChange = true;
         ydoc.transact(() => {
           ytext.delete(0, ytext.length);
           ytext.insert(0, data.content);
@@ -43,10 +41,8 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({ userName }) => {
       }
     };
 
-    // Inscreve-se no evento 'text-updated'
     subscribe("text-updated", handleTextUpdated);
 
-    // Observa mudanças no Yjs e publica as atualizações
     ytext.observe(() => {
       synchronizeEditorContent();
       if (!isLocalChange) {
@@ -54,7 +50,6 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({ userName }) => {
       }
     });
 
-    // Função que atualiza o Yjs com o conteúdo do editor
     const handleEditorInput = () => {
       if (editorRef.current) {
         const newText = editorRef.current.value;
