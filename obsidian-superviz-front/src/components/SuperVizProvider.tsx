@@ -1,7 +1,7 @@
-import React from "react";
 import { Realtime, SuperVizRoomProvider } from "@superviz/react-sdk";
 import { v4 as uuidv4 } from "uuid";
 import MarkdownEditor from "./MarkdownEditor";
+import VideoCallConference from "./VideoConference";
 
 interface SuperVizProviderProps {
   roomId: string;
@@ -9,13 +9,15 @@ interface SuperVizProviderProps {
   supervizKey: string;
 }
 
-const SuperVizProvider: React.FC<SuperVizProviderProps> = ({
+function SuperVizProvider({
   roomId,
   userName,
   supervizKey,
-}) => {
+}: SuperVizProviderProps) {
   const userId = uuidv4();
   const groupId = uuidv4();
+
+  console.log(userId, groupId, supervizKey);
 
   return (
     <SuperVizRoomProvider
@@ -32,8 +34,9 @@ const SuperVizProvider: React.FC<SuperVizProviderProps> = ({
     >
       <Realtime />
       <MarkdownEditor userName={userName} />
+      <VideoCallConference />
     </SuperVizRoomProvider>
   );
-};
+}
 
 export default SuperVizProvider;

@@ -2,7 +2,7 @@ import { VideoConference } from "@superviz/react-sdk";
 
 function VideoCallConference() {
   const collaborationMode = {
-    enabled: false,
+    enabled: true,
   };
 
   return (
