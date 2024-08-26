@@ -1,5 +1,3 @@
----
-
 # Obsidian SuperViz
 
 <p align="center">
@@ -104,5 +102,3 @@ Ensure you have the following installed:
 See the full list of [contributors](https://github.com/yourusername/obsidian-superviz/contributors) who participated in this project.
 
 ### 🔗 Link to the project: [Obsidian SuperViz](https://obsidian-superviz.vercel.app/)
-
----
