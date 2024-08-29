@@ -27,7 +27,6 @@ const RecordingOptionsPopup: React.FC<{
     const fetchRecordings = async () => {
       try {
         const data = await getRecordings(roomId);
-        console.log("Recordings fetched: ", data); // Log for debugging
         setRecordings(data.data || []);
       } catch (error) {
         console.error("Error fetching recordings:", error);
@@ -73,7 +72,6 @@ const RecordingOptionsPopup: React.FC<{
       switch (option) {
         case "Action Items":
           result = await getActionItems(selectedRecordingId);
-          console.log("Action Items: ", result); // Log for debugging
           setDescription(
             JSON.stringify(result.items, null, 2) ||
               "No action items available."
@@ -81,28 +79,24 @@ const RecordingOptionsPopup: React.FC<{
           break;
         case "Follow-Ups":
           result = await getFollowUps(selectedRecordingId);
-          console.log("Follow-Ups: ", result); // Log for debugging
           setDescription(
             JSON.stringify(result.items, null, 2) || "No follow-ups available."
           );
           break;
         case "Questions":
           result = await getQuestions(selectedRecordingId);
-          console.log("Questions: ", result); // Log for debugging
           setDescription(
             JSON.stringify(result.items, null, 2) || "No questions available."
           );
           break;
         case "Topics":
           result = await getTopics(selectedRecordingId);
-          console.log("Topics: ", result); // Log for debugging
           setDescription(
             JSON.stringify(result.items, null, 2) || "No topics available."
           );
           break;
         case "Summary":
           result = await getSummary(selectedRecordingId);
-          console.log("Summary: ", result); // Log for debugging
           setDescription(
             JSON.stringify(result.items, null, 2) || "No summary available."
           );
@@ -128,7 +122,6 @@ const RecordingOptionsPopup: React.FC<{
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="relative bg-gray-800 text-white p-8 rounded-lg shadow-lg w-full max-w-4xl h-[500px] flex">
-        {/* Left Column - Options and recordings */}
         <div className="w-1/3 h-full pr-4 flex flex-col space-y-3">
           <h2 className="text-2xl font-semibold text-center">
             Recording Options
@@ -191,7 +184,6 @@ const RecordingOptionsPopup: React.FC<{
           </div>
         </div>
 
-        {/* Right Column - Transcription text or description */}
         <div className="w-2/3 h-full pl-4 flex flex-col justify-between">
           <h2 className="text-2xl font-semibold text-center">
             {transcriptionGenerated ? "Transcription" : "Details"}
@@ -217,7 +209,6 @@ const RecordingOptionsPopup: React.FC<{
           </div>
         </div>
 
-        {/* Close Button - Round */}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 w-12 h-12 flex items-center justify-center bg-red-500 rounded-full text-white hover:bg-red-600 focus:outline-none"

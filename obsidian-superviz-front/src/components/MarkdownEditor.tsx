@@ -64,7 +64,6 @@ function MarkdownEditor({ userName, channelName }: MarkdownEditorProps) {
           [data.data.userName]: data.data.position,
         }));
       }
-      console.log("Cursor updated: ", data);
     };
 
     subscribe("text-updated", handleTextUpdated);
@@ -82,7 +81,6 @@ function MarkdownEditor({ userName, channelName }: MarkdownEditorProps) {
           isLocalChange = false;
         }
 
-        // Capture and sync cursor position
         const cursorPosition = editorRef.current.selectionStart;
         const coordinates = getCaretCoordinates(
           editorRef.current,

@@ -22,7 +22,6 @@ function SuperVizProvider({
   const toggleRecordingOptions = () => {
     setShowRecordingOptions((prev) => !prev);
   };
-  console.log("RoomId:" + roomId);
 
   return (
     <SuperVizRoomProvider
