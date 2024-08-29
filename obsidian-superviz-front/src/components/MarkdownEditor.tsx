@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRealtime, useFormElements } from "@superviz/react-sdk";
+import * as Y from "yjs";
+import { WebrtcProvider } from "y-webrtc";
 import getCaretCoordinates from "textarea-caret";
 import { throttle } from "lodash";
 
@@ -20,6 +22,11 @@ function MarkdownEditor({ userName, channelName }: MarkdownEditorProps) {
   const { enableRealtimeSync, enableOutline } = useFormElements();
 
   useEffect(() => {
+    const ydoc = new Y.Doc();
+    const provider = new WebrtcProvider(channelName, ydoc);
+
+    const yText = ydoc.getText("markdown");
+
     if (editorRef.current) {
       enableRealtimeSync(editorRef.current.id);
       enableOutline(editorRef.current.id);
@@ -27,17 +34,21 @@ function MarkdownEditor({ userName, channelName }: MarkdownEditorProps) {
 
     let isLocalChange = false;
 
+    const updateEditorContent = () => {
+      if (editorRef.current && !isLocalChange) {
+        isLocalChange = true;
+        editorRef.current.value = yText.toString();
+        isLocalChange = false;
+      }
+    };
+
+    yText.observe(updateEditorContent);
+
     const handleTextUpdated = (data: { data: { content: string } }) => {
-      console.log(
-        "Recebido evento 'text-updated' com conteúdo:",
-        data?.data?.content
-      );
       if (data?.data?.content && !isLocalChange) {
         if (editorRef.current) {
           editorRef.current.value = data.data.content;
         }
-      } else {
-        console.warn("Texto atualizado recebido sem conteúdo válido.", data);
       }
     };
 
@@ -45,33 +56,31 @@ function MarkdownEditor({ userName, channelName }: MarkdownEditorProps) {
       userName: string;
       position: { top: number; left: number };
     }) => {
-      console.log("Recebido evento 'cursor-updated' com dados:", data);
       if (data?.position && data?.userName) {
         setCursorPosition({
           top: data.position.top,
           left: data.position.left,
           userName: data.userName,
         });
-      } else {
-        console.warn("Posição do cursor recebida sem dados válidos.", data);
       }
     };
 
-    // Inscrevendo nos eventos do canal
     subscribe("text-updated", handleTextUpdated);
     subscribe("cursor-updated", handleCursorUpdated);
 
-    const handleEditorInput = () => {
+    const throttledHandleEditorInput = throttle(() => {
       if (editorRef.current) {
         const newText = editorRef.current.value;
-        console.log("Texto no editor foi alterado:", newText);
 
-        isLocalChange = true;
-        console.log("Publicando evento 'text-updated' com conteúdo:", newText);
-        publish("text-updated", { content: newText });
-        isLocalChange = false;
+        if (yText.toString() !== newText) {
+          isLocalChange = true;
+          yText.delete(0, yText.length);
+          yText.insert(0, newText);
+          publish("text-updated", { content: newText });
+          isLocalChange = false;
+        }
       }
-    };
+    }, 100); // Ajuste o intervalo conforme necessário
 
     const throttledHandleCursorMovement = throttle(() => {
       if (editorRef.current) {
@@ -80,38 +89,32 @@ function MarkdownEditor({ userName, channelName }: MarkdownEditorProps) {
           editorRef.current,
           cursorPosition
         );
-        console.log("Movimento do cursor detectado. Coordenadas:", coordinates);
         setCursorPosition({
           top: coordinates.top,
           left: coordinates.left,
           userName: userName,
-        });
-        console.log("Publicando evento 'cursor-updated' com dados:", {
-          userName,
-          position: { top: coordinates.top, left: coordinates.left },
         });
         publish("cursor-updated", {
           userName,
           position: { top: coordinates.top, left: coordinates.left },
         });
       }
-    }, 200); // Ajuste o intervalo conforme necessário
+    }, 100); // Ajuste o intervalo conforme necessário
 
     const editor = editorRef.current;
     if (editor) {
-      console.log("Adicionando listeners para eventos 'input' e 'keyup'.");
-      editor.addEventListener("input", handleEditorInput);
+      editor.addEventListener("input", throttledHandleEditorInput);
       editor.addEventListener("keyup", throttledHandleCursorMovement);
     }
 
     return () => {
       if (editor) {
-        console.log("Removendo listeners dos eventos 'input' e 'keyup'.");
-        editor.removeEventListener("input", handleEditorInput);
+        editor.removeEventListener("input", throttledHandleEditorInput);
         editor.removeEventListener("keyup", throttledHandleCursorMovement);
       }
       unsubscribe("text-updated", handleTextUpdated);
       unsubscribe("cursor-updated", handleCursorUpdated);
+      provider.destroy();
     };
   }, [
     publish,
