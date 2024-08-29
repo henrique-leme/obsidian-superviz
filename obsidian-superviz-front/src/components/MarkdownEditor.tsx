@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useRealtime, useFormElements } from "@superviz/react-sdk";
 import getCaretCoordinates from "textarea-caret";
+import { throttle } from "lodash";
+
 interface MarkdownEditorProps {
   userName: string;
   channelName: string;
@@ -71,7 +73,7 @@ function MarkdownEditor({ userName, channelName }: MarkdownEditorProps) {
       }
     };
 
-    const handleCursorMovement = () => {
+    const throttledHandleCursorMovement = throttle(() => {
       if (editorRef.current) {
         const cursorPosition = editorRef.current.selectionStart;
         const coordinates = getCaretCoordinates(
@@ -93,20 +95,20 @@ function MarkdownEditor({ userName, channelName }: MarkdownEditorProps) {
           position: { top: coordinates.top, left: coordinates.left },
         });
       }
-    };
+    }, 200); // Ajuste o intervalo conforme necessário
 
     const editor = editorRef.current;
     if (editor) {
       console.log("Adicionando listeners para eventos 'input' e 'keyup'.");
       editor.addEventListener("input", handleEditorInput);
-      editor.addEventListener("keyup", handleCursorMovement);
+      editor.addEventListener("keyup", throttledHandleCursorMovement);
     }
 
     return () => {
       if (editor) {
         console.log("Removendo listeners dos eventos 'input' e 'keyup'.");
         editor.removeEventListener("input", handleEditorInput);
-        editor.removeEventListener("keyup", handleCursorMovement);
+        editor.removeEventListener("keyup", throttledHandleCursorMovement);
       }
       unsubscribe("text-updated", handleTextUpdated);
       unsubscribe("cursor-updated", handleCursorUpdated);
@@ -118,7 +120,7 @@ function MarkdownEditor({ userName, channelName }: MarkdownEditorProps) {
     channelName,
     enableRealtimeSync,
     enableOutline,
-    userName, // Adicionado userName como dependência do efeito
+    userName,
   ]);
 
   return (
@@ -127,7 +129,7 @@ function MarkdownEditor({ userName, channelName }: MarkdownEditorProps) {
         {cursorPosition && (
           <div
             className="absolute text-sm bg-blue-500 text-white rounded px-2 py-1"
-            style={{ top: cursorPosition.top, left: cursorPosition.left }}
+            style={{ top: cursorPosition.top - 20, left: cursorPosition.left }}
           >
             {cursorPosition.userName}
           </div>
