@@ -13,11 +13,9 @@ interface MarkdownEditorProps {
 function MarkdownEditor({ userName, channelName }: MarkdownEditorProps) {
   const { publish, subscribe, unsubscribe } = useRealtime(channelName);
   const editorRef = useRef<HTMLTextAreaElement>(null);
-  const [cursorPosition, setCursorPosition] = useState<{
-    top: number;
-    left: number;
-    userName: string;
-  } | null>(null);
+  const [cursors, setCursors] = useState<{
+    [userName: string]: { top: number; left: number };
+  }>({});
 
   const { enableRealtimeSync, enableOutline } = useFormElements();
 
@@ -61,11 +59,10 @@ function MarkdownEditor({ userName, channelName }: MarkdownEditorProps) {
       };
     }) => {
       if (data?.data?.position && data?.data?.userName) {
-        setCursorPosition({
-          top: data.data.position.top,
-          left: data.data.position.left,
-          userName: data.data.userName,
-        });
+        setCursors((prevCursors) => ({
+          ...prevCursors,
+          [data.data.userName]: data.data.position,
+        }));
       }
       console.log("Cursor updated: ", data);
     };
@@ -91,11 +88,6 @@ function MarkdownEditor({ userName, channelName }: MarkdownEditorProps) {
           editorRef.current,
           cursorPosition
         );
-        setCursorPosition({
-          top: coordinates.top,
-          left: coordinates.left,
-          userName: userName,
-        });
         publish("cursor-updated", {
           userName,
           position: { top: coordinates.top, left: coordinates.left },
@@ -103,7 +95,7 @@ function MarkdownEditor({ userName, channelName }: MarkdownEditorProps) {
       }
     };
 
-    const throttledHandleEditorInput = throttle(handleEditorInput, 50); // Intervalo reduzido para sincronização mais rápida
+    const throttledHandleEditorInput = throttle(handleEditorInput, 50);
 
     const editor = editorRef.current;
     if (editor) {
@@ -131,14 +123,15 @@ function MarkdownEditor({ userName, channelName }: MarkdownEditorProps) {
   return (
     <div className="flex justify-center items-start bg-gray-900 text-white min-h-screen pt-10">
       <div className="w-full max-w-7xl h-[600px] p-8 bg-gray-800 rounded-lg shadow-lg relative">
-        {cursorPosition && (
+        {Object.entries(cursors).map(([name, position]) => (
           <div
+            key={name}
             className="absolute text-sm bg-blue-500 text-white rounded px-2 py-1"
-            style={{ top: cursorPosition.top, left: cursorPosition.left + 50 }}
+            style={{ top: position.top, left: position.left + 50 }}
           >
-            {cursorPosition.userName}
+            {name}
           </div>
-        )}
+        ))}
         <textarea
           ref={editorRef}
           id="markdown-editor"
