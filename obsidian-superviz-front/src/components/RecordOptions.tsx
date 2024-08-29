@@ -49,7 +49,9 @@ const RecordingOptionsPopup: React.FC<{
       );
       console.log("Transcript generated: ", transcriptResponse);
       setTranscriptionGenerated(true);
-      setDescription("Transcription successfully generated.");
+      setDescription(
+        transcriptResponse.text || "Transcription successfully generated."
+      );
       setLoading(false);
     } catch (error) {
       console.error("Error generating transcript:", error);
@@ -72,33 +74,51 @@ const RecordingOptionsPopup: React.FC<{
       switch (option) {
         case "Action Items":
           result = await getActionItems(selectedRecordingId);
+          console.log(result);
           setDescription(
-            JSON.stringify(result.items, null, 2) ||
-              "No action items available."
+            JSON.stringify(result, null, 2) ||
+              "No action items available at the moment. If this recording was done recently, please try again later."
           );
           break;
         case "Follow-Ups":
           result = await getFollowUps(selectedRecordingId);
+          console.log(result);
           setDescription(
-            JSON.stringify(result.items, null, 2) || "No follow-ups available."
+            JSON.stringify(result, null, 2) ||
+              "No follow-ups available at the moment. If this recording was done recently, please try again later."
           );
           break;
         case "Questions":
           result = await getQuestions(selectedRecordingId);
+          console.log(result);
           setDescription(
-            JSON.stringify(result.items, null, 2) || "No questions available."
+            JSON.stringify(result, null, 2) ||
+              "No questions available at the moment. If this recording was done recently, please try again later."
           );
           break;
-        case "Topics":
+        case "Topics": {
           result = await getTopics(selectedRecordingId);
+          console.log(result);
+
+          const formattedTopics = result
+            .map(
+              (topic: { text: string; score: string }) =>
+                `Topic: ${topic.text}, Score: ${topic.score}`
+            )
+            .join("\n");
+
           setDescription(
-            JSON.stringify(result.items, null, 2) || "No topics available."
+            formattedTopics ||
+              "No topics available at the moment. If this recording was done recently, please try again later."
           );
           break;
+        }
         case "Summary":
           result = await getSummary(selectedRecordingId);
+          console.log(result);
           setDescription(
-            JSON.stringify(result.items, null, 2) || "No summary available."
+            JSON.stringify(result[0].text, null, 2) ||
+              "No summary available at the moment. If this recording was done recently, please try again later."
           );
           break;
         default:
@@ -144,7 +164,8 @@ const RecordingOptionsPopup: React.FC<{
             </select>
           ) : (
             <p className="text-center text-gray-400">
-              No recordings available.
+              No recordings available. If this recording was done recently,
+              please try again later.
             </p>
           )}
 
@@ -191,7 +212,7 @@ const RecordingOptionsPopup: React.FC<{
           <div className="bg-gray-700 p-4 rounded-lg flex-grow overflow-auto text-center">
             {description ? (
               <div>
-                <pre>{description}</pre>
+                <pre style={{ whiteSpace: "pre-wrap" }}>{description}</pre>
                 {transcriptionGenerated && (
                   <button
                     onClick={() => copyToClipboard(description)}

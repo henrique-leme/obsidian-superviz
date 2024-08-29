@@ -5,6 +5,7 @@ const API_BASE_URL = "https://nodeapi.superviz.com";
 const EMAIL = import.meta.env.VITE_SUPERVIZ_EMAIL;
 const PASSWORD = import.meta.env.VITE_SUPERVIZ_PASSWORD;
 const API_KEY = import.meta.env.VITE_SUPERVIZ_DEVELOPER_KEY;
+const API_PASSPHRASE = import.meta.env.VITE_SUPERVIZ_PASSPHRASE;
 
 // Cache for Access Token
 let cachedAccessToken: string | null = null;
@@ -50,6 +51,7 @@ const getAuthHeaders = async () => {
   return {
     Authorization: `Bearer ${accessToken}`,
     apiKey: API_KEY,
+    passphrase: API_PASSPHRASE,
     "Content-Type": "application/json",
   };
 };
@@ -132,7 +134,7 @@ export const postGenerateTranscript = async (recordingId: string) => {
       `${API_BASE_URL}/recordings/transcripts`,
       {
         recordingId,
-        language: "en-US", // Set language for the transcript
+        language: "en-US",
       },
       { headers }
     );
@@ -261,6 +263,7 @@ export const getRecordings = async (roomId?: string) => {
         roomId: roomId || undefined, // Filter by roomId if provided
       },
     });
+    console.log(response);
 
     return response.data;
   } catch (error) {
