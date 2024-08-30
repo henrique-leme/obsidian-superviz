@@ -51,7 +51,7 @@ Ensure you have the following installed:
 1. Clone the repository:
 
    ```sh
-   git clone https://github.com/yourusername/obsidian-superviz.git
+   git clone https://github.com/henrique-leme/obsidian-superviz.git
    ```
 
 2. Navigate to the project directory:
@@ -98,6 +98,6 @@ Ensure you have the following installed:
 
 - **My Myself and I** - _Developer_ - [GitHub](https://github.com/henrique-leme)
 
-See the full list of [contributors](https://github.com/yourusername/obsidian-superviz/contributors) who participated in this project.
+See the full list of [contributors](https://github.com/henrique-leme/obsidian-superviz/contributors) who participated in this project.
 
 ### 🔗 Link to the project: [Obsidian SuperViz](https://obsidian-superviz.vercel.app/)
