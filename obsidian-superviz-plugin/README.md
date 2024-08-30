@@ -46,7 +46,7 @@ Ensure you have the following installed:
 
 -   Git
 -   Node.js
--   pnpm (ou npm)
+-   pnpm
 
 ### 🔧 Installation
 
@@ -59,7 +59,7 @@ Ensure you have the following installed:
 2. Navigate to the project directory:
 
     ```sh
-    cd obsidian-superviz-plugin
+    cd obsidian-superviz/obsidian-superviz-plugin
     ```
 
 3. Install dependencies:
