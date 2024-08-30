@@ -19,11 +19,11 @@ Aqui está o README ajustado para incluir as instruções detalhadas de como rod
 
 ### ⚙️ Features
 
-- **Real-Time Collaboration**: Utilizes **Yjs** for conflict-free real-time collaboration within Obsidian, allowing multiple users to work on the same Markdown document.
-- **Presence Tracking**: Integration with **SuperViz** to track and display the real-time presence of collaborators, showing who is editing the document.
-- **Video Conference Integration**: Allows users to initiate real-time **video conferencing** directly from the Obsidian plugin, enhancing communication during collaboration.
-- **Session Recording**: Ability to record collaborative sessions for later reference, ensuring important discussions are preserved.
-- **Transcriptions**: Post-session transcription generation to easily review and summarize meeting discussions.
+-   **Real-Time Collaboration**: Utilizes **Yjs** for conflict-free real-time collaboration within Obsidian, allowing multiple users to work on the same Markdown document.
+-   **Presence Tracking**: Integration with **SuperViz** to track and display the real-time presence of collaborators, showing who is editing the document.
+-   **Video Conference Integration**: Allows users to initiate real-time **video conferencing** directly from the Obsidian plugin, enhancing communication during collaboration.
+-   **Session Recording**: Ability to record collaborative sessions for later reference, ensuring important discussions are preserved.
+-   **Transcriptions**: Post-session transcription generation to easily review and summarize meeting discussions.
 
 ### 📚 Project Vision
 
@@ -31,10 +31,10 @@ The vision for this project is to evolve into a robust tool for teams to collabo
 
 ### 📝 Table of Contents
 
-- [Getting Started](#getting-started)
-- [How to Run](#how-to-run)
-- [Development](#development)
-- [Authors](#authors)
+-   [Getting Started](#getting-started)
+-   [How to Run](#how-to-run)
+-   [Development](#development)
+-   [Authors](#authors)
 
 ## 🚀 Getting Started
 
@@ -44,80 +44,80 @@ Follow these instructions to set up the plugin on your local Obsidian environmen
 
 Ensure you have the following installed:
 
-- Git
-- Node.js
-- pnpm (ou npm)
+-   Git
+-   Node.js
+-   pnpm (ou npm)
 
 ### 🔧 Installation
 
 1. Clone the repository:
 
-   ```sh
-   git clone https://github.com/henrique-leme/obsidian-superviz-plugin.git
-   ```
+    ```sh
+    git clone https://github.com/henrique-leme/obsidian-superviz.git
+    ```
 
 2. Navigate to the project directory:
 
-   ```sh
-   cd obsidian-superviz-plugin
-   ```
+    ```sh
+    cd obsidian-superviz-plugin
+    ```
 
 3. Install dependencies:
 
-   ```sh
-   pnpm install
-   ```
+    ```sh
+    pnpm install
+    ```
 
 4. Build the plugin:
 
-   ```sh
-   pnpm build
-   ```
+    ```sh
+    pnpm build
+    ```
 
 ### ⚙️ How to Run
 
 1. **Prepare the Plugin Folder in Obsidian:**
 
-   - Navigate to the `.obsidian/plugins/` directory within your Obsidian vault.
+    - Navigate to the `.obsidian/plugins/` directory within your Obsidian vault.
 
-   - Create a new folder for your plugin:
+    - Create a new folder for your plugin:
 
-     ```sh
-     mkdir /path/to/your/vault/.obsidian/plugins/obsidian-superviz-plugin
-     ```
+        ```sh
+        mkdir /path/to/your/vault/.obsidian/plugins/obsidian-superviz-plugin
+        ```
 
 2. **Copy the Built Files:**
 
-   - After building the plugin, copy the compiled files (`main.js`, `manifest.json`, and `styles.css` if applicable) into the newly created folder:
+    - After building the plugin, copy the compiled files (`main.js`, `manifest.json`, and `styles.css` if applicable) into the newly created folder:
 
-     ```sh
-     cp -r dist/* /path/to/your/vault/.obsidian/plugins/obsidian-superviz-plugin/
-     ```
+        ```sh
+        cp -r dist/* /path/to/your/vault/.obsidian/plugins/obsidian-superviz-plugin/
+        ```
 
 3. **Activate the Plugin in Obsidian:**
 
-   - Open Obsidian and go to `Settings -> Community plugins`.
-   - Enable the **Obsidian SuperViz Plugin**.
+    - Open Obsidian and go to `Settings -> Community plugins`.
+    - Enable the **Obsidian SuperViz Plugin**.
 
 4. **Open the Collaborative Editor:**
 
-   - Use the plugin's sidebar icon or the shortcut `Ctrl + Shift + E` to open the collaborative editor.
+    - Use the plugin's sidebar icon or the shortcut `Ctrl + Shift + E` to open the collaborative editor.
 
 ## 🛠️ Built With
 
-- **Plugin:**
-  - [Obsidian API](https://github.com/obsidianmd/obsidian-api) - The API for building Obsidian plugins
-  - [TypeScript](https://www.typescriptlang.org/) - The programming language
-  - [Yjs](https://yjs.dev/) - The CRDT library for real-time collaboration
-  - [SuperViz](https://superviz.com/) - The SDK for collaborative presence and video conferencing
+-   **Plugin:**
+    -   [Obsidian API](https://github.com/obsidianmd/obsidian-api) - The API for building Obsidian plugins
+    -   [TypeScript](https://www.typescriptlang.org/) - The programming language
+    -   [Yjs](https://yjs.dev/) - The CRDT library for real-time collaboration
+    -   [SuperViz](https://superviz.com/) - The SDK for collaborative presence and video conferencing
 
 ## ✒️ Author
 
-- **Henrique Leme** - _Developer_ - [GitHub](https://github.com/henrique-leme)
+-   **Henrique Leme** - _Developer_ - [GitHub](https://github.com/henrique-leme)
 
-See the full list of [contributors](https://github.com/henrique-leme/obsidian-superviz-plugin/contributors) who participated in this project.
+See the full list of [contributors](https://github.com/henrique-leme/obsidian-superviz/contributors) who participated in this project.
 
-### 🔗 Link to the project: [Obsidian SuperViz Plugin](https://github.com/henrique-leme/obsidian-superviz-plugin)
+### 🔗 Link to the project: [Obsidian SuperViz Plugin](https://github.com/henrique-leme/obsidian-superviz/tree/main/obsidian-superviz-plugin)
 
 ---
 
