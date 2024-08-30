@@ -133,7 +133,7 @@ export const postGenerateTranscript = async (recordingId: string) => {
     const response = await axios.post(
       `${API_BASE_URL}/recordings/transcripts`,
       {
-        recordingId,
+        recordingId: recordingId,
         language: "en-US",
       },
       { headers }
