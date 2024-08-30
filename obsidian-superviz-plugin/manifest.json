@@ -1,0 +1,10 @@
+{
+	"id": "obsidian-superviz-plugin",
+	"name": "Obsidian Superviz Plugin",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "Demonstrates some of the SuperViz SDK along with the Yjs.",
+	"author": "Henrique Leme",
+	"authorUrl": "https://github.com/henrique-leme",
+	"isDesktopOnly": false
+}
